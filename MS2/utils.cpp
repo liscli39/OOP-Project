@@ -7,68 +7,56 @@
 #include "utils.h"
 #include "Time.h"
 using namespace std;
-namespace sdds
-{
+namespace sdds {
   bool debug = false; // made global in utils.h
-  int getTime()
-  {
+  int getTime() {
     int mins = -1;
-    if (debug)
-    {
+    if (debug) {
       Time t(0);
       cout << "Enter current time: ";
-      do
-      {
+      do {
         cin.clear();
         cin >> t; // needs extraction operator overloaded for Time
-        if (!cin)
-        {
+        if (!cin) {
           cout << "Invlid time, try agian (HH:MM): ";
           cin.clear();
           cin.ignore(1000, '\n');
         }
-        else
-        {
+        else {
           mins = int(t);
         }
       } while (mins < 0);
     }
-    else
-    {
+    else {
       mins = 1063;
     }
     return mins;
   }
 
-  void clearStandardInputBuffer(void)
-  {
-    while (getchar() != '\n');
+  void clearStandardInputBuffer(void) {
+    while (getchar() != '\n') {}
   }
 
-  int getInt(const char *prompt)
-  {
+  int getInt(const char *prompt) {
     int number = 0;
     char c;
-    if (prompt != nullptr)
-    {
+    bool negative = false;
+
+    if (prompt != nullptr) {
       cout << prompt;
     }
 
-    do
-    {
+    do {
       c = getchar();
-      if (c >= '0' && c <= '9' && c != '\n')
-      {
+      if (number == 0 && c == '-') {
+        negative = true;
+      } else if (c >= '0' && c <= '9') {
         number = number * 10 + (c - '0');
-      }
-      else if (c != '\n')
-      {
-        if (number == 0)
-        {
+      } else if (c != '\n') {
+        if (number == 0) {
           cout << "Bad integer value, try again: ";
         }
-        else
-        {
+        else {
           cout << "Enter only an integer, try again: ";
         }
 
@@ -77,21 +65,18 @@ namespace sdds
       }
     } while (c != '\n');
 
+    number = negative ? - number : number;
     return number;
   }
 
-  int getInt(int min, int max, const char *prompt, const char *errorMessage, bool showRangeAtError)
-  {
+  int getInt(int min, int max, const char *prompt, const char *errorMessage, bool showRangeAtError) {
     int number;
     cout << prompt;
-    do
-    {
+    do {
       number = getInt();
-      if (number < min || number > max)
-      {
+      if (number < min || number > max) {
         cout << errorMessage;
-        if (showRangeAtError)
-        {
+        if (showRangeAtError) {
           cout << "[" << min << " <= value <= " << max << "]: ";
         }
       }
@@ -100,8 +85,7 @@ namespace sdds
     return number;
   }
 
-  char *getcstr(const char *prompt, istream &istr, char delimiter)
-  {
+  char *getcstr(const char *prompt, istream &istr, char delimiter) {
     if (prompt != nullptr) {
       cout << prompt;
     }
@@ -110,19 +94,15 @@ namespace sdds
     char *tmp = nullptr;
     char c;
     int l = 0;
-    do
-    {
+    do {
       istr.get(c);
-      if (c != delimiter)
-      {
-        if (str != nullptr)
-        {
+      if (c != delimiter) {
+        if (str != nullptr) {
           delete[] str;
         }
         str = new char[++l + 1];
 
-        if (tmp != nullptr)
-        {
+        if (tmp != nullptr) {
           strcpy(str, tmp);
           delete[] tmp;
         }
