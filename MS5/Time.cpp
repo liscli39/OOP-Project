@@ -36,7 +36,7 @@ namespace sdds {
     int minute = 0;
 
     istr >> hour >> separated >> minute;
-    if (hour <= 0 || minute <= 0 || separated != ':') {
+    if (hour < 0 || minute < 0 || separated != ':') {
       istr.setstate(ios::failbit);
     } else {
       m_min = hour * 60 + minute;
